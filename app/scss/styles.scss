@@ -1,0 +1,38 @@
+@charset 'utf-8';
+@import 'susy/sass/susy';
+@import 'sprites';
+
+.flex {
+  display: flex;
+}
+$color: #F60;
+
+h1 {
+  margin: 0;
+  padding: 0;
+
+  color: $color;
+  background-image: url('../images/sprites.png');
+  background-position: 0 0 0 0;
+}
+
+.active {
+  background-color: #CCC;
+}
+
+.susy-test {
+  @include span(5);
+}
+
+.susy-test {
+  @include span(last 2);
+}
+
+.github {
+  @include sprite($github);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .github {
+    @include retina-sprite($github-group);
+  }
+}
