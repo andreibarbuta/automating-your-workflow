@@ -160,16 +160,16 @@ To change `display` (e.g. `display: inline-block;`), we suggest using a common C
 }
 
 @mixin sprite-position($sprite) {
-  background-position: $sprite-offset-x  $sprite-offset-y;
-
   $sprite-offset-x: nth($sprite, 3);
   $sprite-offset-y: nth($sprite, 4);
+
+  background-position: $sprite-offset-x  $sprite-offset-y;
 }
 
 @mixin sprite-image($sprite) {
-  background-image: url(#{$sprite-image});
-
   $sprite-image: nth($sprite, 9);
+
+  background-image: url(#{$sprite-image});
 }
 
 @mixin sprite($sprite) {
@@ -192,15 +192,16 @@ $icon-home-group: ('icon-home', $icon-home, $icon-home-2x, );
 }
 */
 @mixin sprite-background-size($sprite) {
-  background-size: $sprite-total-width $sprite-total-height;
-
   $sprite-total-width: nth($sprite, 7);
   $sprite-total-height: nth($sprite, 8);
+
+  background-size: $sprite-total-width $sprite-total-height;
 }
 
 @mixin retina-sprite($retina-group) {
   $normal-sprite: nth($retina-group, 2);
   $retina-sprite: nth($retina-group, 3);
+
   @include sprite($normal-sprite);
 
   @media (-webkit-min-device-pixel-ratio: 2),

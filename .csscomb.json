@@ -23,6 +23,9 @@
   "vendor-prefix-align": true,
   "sort-order": [
     [
+      "$variable"
+    ],
+    [
       "font",
       "font-family",
       "font-size",
