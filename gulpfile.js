@@ -197,3 +197,15 @@ gulp.task('default', function(callback) {
     callback
   );
 });
+
+// TravisCI task
+gulp.task('dev-ci', function(callback) {
+  'use strict';
+  runSequence(
+    'clean:dev',
+    ['sprites'],
+    ['lint:js', 'lint:scss'],
+    ['sass', 'nunjucks'],
+    callback
+  );
+});
