@@ -6,3 +6,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
 script:
   - gulp test
+install:
+  - "npm install"
+  - "npm install bower -g"
+  - "bower install"
