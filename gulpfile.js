@@ -15,7 +15,7 @@ var runSequence = require('run-sequence');
 var jshint = require('gulp-jshint');
 var jscs = require('gulp-jscs');
 var sassLint = require('gulp-sass-lint');
-var csscomb = require('gulp-csscomb');
+// var csscomb = require('gulp-csscomb');
 var Server = require('karma').Server;
 var gutil = require('gulp-util');
 
@@ -53,7 +53,7 @@ gulp.task('browserSync', function() {
     server: {
       baseDir: 'app'
     },
-    host: '192.168.1.5',
+    host: '192.168.1.4',
     browser: ['firefox'],
     // open: false,
     // notify: false,
@@ -148,32 +148,32 @@ gulp.task('lint:js', function() {
 });
 
 // Lint SCSS with gulp-sass-lint
-// gulp.task('lint:scss', function () {
-//   'use strict';
-//   return gulp.src('app/scss/**/*.s+(a|c)ss')
-//   .pipe(sassLint({
-//     options: {
-//       formatter: 'stylish',
-//     },
-//     files: {
-//       ignore: ([
-//         'app/scss/_sprites.scss',
-//         // 'app/scss/print.scss',
-//       ])
-//     },
-//     config: '.sass-lint.yml'
-//   }))
-//   .pipe(sassLint.format())
-//   .pipe(sassLint.failOnError());
-// });
-
-// Lint SCSS with gulp-csscomb
 gulp.task('lint:scss', function() {
   'use strict';
   return gulp.src('app/scss/**/*.s+(a|c)ss')
-  .pipe(csscomb())
-  .pipe(gulp.dest('app/scss'));
+  .pipe(sassLint({
+    // options: {
+    //   formatter: 'stylish'
+    // },
+    files: {
+      ignore: ([
+        'app/scss/_sprites.scss',
+        // 'app/scss/print.scss',
+      ])
+    },
+    configFile: '.sass-lint.yml'
+  }));
+  // .pipe(sassLint.format())
+  // .pipe(sassLint.failOnError());
 });
+
+// Lint SCSS with gulp-csscomb : It's better to run CSSComb in the IDE
+// gulp.task('lint:scss', function() {
+//   'use strict';
+//   return gulp.src('app/scss/**/*.s+(a|c)ss')
+//   .pipe(csscomb())
+//   .pipe(gulp.dest('app/scss'));
+// });
 
 // Karma
 gulp.task('test', function(done) {
@@ -197,11 +197,7 @@ gulp.task('clean:dev', function() {
 gulp.task('default', function(callback) {
   'use strict';
   runSequence(
-    'clean:dev',
-    ['sprites'],
-    ['lint:js', 'lint:scss'],
-    ['sass', 'nunjucks'],
-    ['browserSync', 'watch'],
+    'clean:dev', ['sprites', 'lint:js', 'lint:scss'], ['sass', 'nunjucks'], ['browserSync', 'watch'],
     callback
   );
 });
@@ -210,10 +206,7 @@ gulp.task('default', function(callback) {
 gulp.task('dev-ci', function(callback) {
   'use strict';
   runSequence(
-    'clean:dev',
-    ['sprites'],
-    ['lint:js', 'lint:scss'],
-    ['sass', 'nunjucks'],
+    'clean:dev', ['sprites', 'lint:js', 'lint:scss'], ['sass', 'nunjucks'],
     callback
   );
 });
