@@ -26,11 +26,11 @@ var uncss = require('gulp-uncss');
 var cssnano = require('gulp-cssnano');
 var imagemin = require('gulp-imagemin');
 var cache = require('gulp-cache');
-var newer = require('gulp-newer');
+// var newer = require('gulp-newer');
 var rev = require('gulp-rev');
 var revReplace = require('gulp-rev-replace');
 var ftp = require('vinyl-ftp');
-var vinylConfig = require('./vinylConfig.js');
+// var vinylConfig = require('./vinylConfig.js');
 var creds = JSON.parse(fs.readFileSync('./secrets.json'));
 
 var devip = require('dev-ip');
