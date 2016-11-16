@@ -18,6 +18,17 @@ var sassLint = require('gulp-sass-lint');
 // var csscomb = require('gulp-csscomb');
 var Server = require('karma').Server;
 var gutil = require('gulp-util');
+var useref = require('gulp-useref');
+var uglify = require('gulp-uglify');
+var debug = require('gulp-debug');
+var cached = require('gulp-cached');
+var uncss = require('gulp-uncss');
+var cssnano = require('gulp-cssnano');
+var imagemin = require('gulp-imagemin');
+var cache = require('gulp-cache');
+var newer = require('gulp-newer');
+var rev = require('gulp-rev');
+var revReplace = require('gulp-rev-replace');
 
 var devip = require('dev-ip');
 
@@ -209,4 +220,80 @@ gulp.task('dev-ci', function(callback) {
     'clean:dev', ['sprites', 'lint:js', 'lint:scss'], ['sass', 'nunjucks'],
     callback
   );
+});
+
+gulp.task('useref', function() {
+  'use strict';
+  // var assets = useref.assets();
+  return gulp.src('app/*.html')
+  .pipe(useref())
+  .pipe(cached('useref'))
+  .pipe(debug())
+  .pipe(gulpIf('*.js', uglify()))
+  .pipe(gulpIf('*.css', uncss({
+    html: ['app/*.html'],
+    ignore: [
+      '.susy-test',
+      /.is-/,
+      /.has-/
+    ]
+  })))
+  .pipe(gulpIf('*.css', cssnano()))
+  .pipe(gulpIf('*.js', rev()))
+  .pipe(gulpIf('*.css', rev()))
+  .pipe(revReplace())
+  .pipe(gulp.dest('dist'));
+});
+
+gulp.task('images', function() {
+  'use strict';
+  return gulp.src('app/images/**/*.+(png|jpg|jpeg|gif|svg)')
+  .pipe(cache(imagemin(), {
+    name: 'project'
+  }))
+  .pipe(gulp.dest('dist/images'));
+});
+
+gulp.task('cache:clear', function(callback) {
+  'use strict';
+  return cache.clearAll(callback);
+});
+
+// gulp.task('images:newer', function() {
+//   'use strict';
+//   return gulp.src('app/images/**/*.+(png|jpg|jpeg|gif|svg)')
+//   .pipe(newer('dist/images'))
+//   .pipe(imagemin())
+//   .pipe(gulp.dest('dist/images'));
+// });
+
+gulp.task('fonts', function() {
+  'use strict';
+  return gulp.src('app/fonts/**/*')
+  .pipe(gulp.dest('dist/fonts/'));
+});
+
+gulp.task('clean:dist', function() {
+  'use strict';
+  return del.sync(['dist']);
+});
+
+gulp.task('build', function() {
+  'use strict';
+  runSequence(
+    ['clean:dev', 'clean:dist'],
+    ['sprites', 'lint:js', 'lint:scss'],
+    ['sass', 'nunjucks'],
+    ['test'],
+    ['useref', 'images', 'fonts']
+  );
+});
+
+gulp.task('browserSync:dist', function() {
+  'use strict';
+  browserSync.init({
+    server: {
+      baseDir: 'dist'
+    }
+  });
 });

@@ -1,42 +1,34 @@
-@charset 'utf-8';
-@import 'susy/sass/susy';
-@import 'sprites';
+@charset "utf-8";
+@import "susy/sass/susy";
+@import "sprites";
 
-.flex {
-  display: flex;
-}
+.flex { display: flex; }
+
 $color: #f60;
 
 h1 {
   margin: 0;
+  margin-left: 0;
   padding: 0;
-
   color: $color;
-  background-image: url('../images/sprites.png');
-  background-position: 0 0 0 0;
-}
+  background-image: url("../images/sprites.png");
+  background-position: 0 0 0 0; }
 
-// .testing {
-//   color: $cucu;
-// }
+// .testing { color: $cucu; }
 
-.active {
-  background-color: #ccc;
-}
+.active { background-color: #ccc; }
 
-.susy-test {
-  @include span(5);
-}
+/* uncss:ignore */
+.wow { color: #444; }
 
-.susy-test {
-  @include span(last 2);
-}
+.is-active { color: red; }
 
-.github {
-  @include sprite($github);
-}
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .github {
-    @include retina-sprite($github-group);
-  }
-}
+.has-border { border: 2px solid black; }
+
+.susy-test { @include span(5); }
+
+.susy-test { @include span(5 last); }
+
+.github { @include sprite($github); }
+@media ( -webkit-min-device-pixel-ratio: 2 ), ( min-resolution: 192dpi ) {
+  .github { @include retina-sprite($github-group); } }

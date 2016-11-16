@@ -4,6 +4,9 @@
 Thumbs.db
 profile
 
+# Ignore images
+images
+
 # ignore sublime projects
 *.sublime-project
 *.sublime-workspace
