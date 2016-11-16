@@ -29,6 +29,9 @@ var cache = require('gulp-cache');
 var newer = require('gulp-newer');
 var rev = require('gulp-rev');
 var revReplace = require('gulp-rev-replace');
+var ftp = require('vinyl-ftp');
+var vinylConfig = require('./vinylConfig.js');
+var creds = JSON.parse(fs.readFileSync('./secrets.json'));
 
 var devip = require('dev-ip');
 
@@ -294,6 +297,76 @@ gulp.task('browserSync:dist', function() {
   browserSync.init({
     server: {
       baseDir: 'dist'
+    }
+  });
+});
+
+// var conn = ftp.create({
+//   host:     vinylConfig.config.host,
+//   user:     vinylConfig.config.user,
+//   password: vinylConfig.config.pass,
+//   parallel: 5,
+//   log:      gutil.log
+// });
+
+var conn = ftp.create({
+  host: creds.server,
+  user: creds.username,
+  password: creds.password,
+  port: 21,
+  parallel: 5,
+  maxConnections: 10,
+  // secure: true,
+  log: gutil.log
+});
+
+var globs = [
+  'dist/**/*'
+  // 'src/**',
+  // 'css/**',
+  // 'js/**',
+  // 'fonts/**',
+  // 'index.html',
+  // '!test-gulp2/**',
+  // 'test-gulp/**',
+  // '../test-theme.html',
+  // '../../../../test-root.html',
+  // '../../../../*.*',
+  // '!../../../../wp-config.development.php',
+  // '!../../../../wp-config.env.php',
+  // '!wp-admin{,/**}',
+  // '!wp-content{,/**}',
+  // '!wp-includes{,/**}',
+  // '!../../../../../local.rural.ro/wiki{,/**}',
+  // '!../rural-app/node_modules{,/**}',
+  // '!vinylConfig.js',
+  // '../../../../**/*',
+];
+
+gulp.task('ftp', function() {
+  'use strict';
+  return gulp.src( globs, {
+    // base: '.',
+    buffer: true,
+  })
+  .pipe(conn.newer(''))
+  .pipe(conn.dest(''));
+});
+
+gulp.task('ftp-wipe', function() {
+  'use strict';
+  conn.rmdir('.', function (err) {
+    if (err) {
+      console.log(err);
+    }
+  });
+});
+
+gulp.task('ftp-clean', function() {
+  'use strict';
+  conn.clean( './', 'dist/**/*', function (err) {
+    if (err) {
+      console.log(err);
     }
   });
 });

@@ -7,6 +7,10 @@ profile
 # Ignore images
 images
 
+# Do not include login info
+vinylConfig.js
+secrets.json
+
 # ignore sublime projects
 *.sublime-project
 *.sublime-workspace
